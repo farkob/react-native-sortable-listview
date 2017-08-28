@@ -29,7 +29,7 @@ class Row extends React.Component {
   handleLongPress = e => {
     this.refs.view.measure(
       (frameX, frameY, frameWidth, frameHeight, pageX, pageY) => {
-        const layout = { frameHeight, pageY }
+        const layout = { frameHeight, pageY: frameY }
         this.props.onRowActive({
           layout,
           touch: e.nativeEvent,
