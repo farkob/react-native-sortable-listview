@@ -267,7 +267,7 @@ class SortableListView extends React.Component {
   }
 
   measureWrapper = () => {
-    this.refs.wrapper.measure(
+    this.wrapper.measure(
       (frameX, frameY, frameWidth, frameHeight, pageX, pageY) => {
         const layout = {
           frameX,
@@ -472,7 +472,7 @@ class SortableListView extends React.Component {
       !this.state.active && this.props.scrollEnabled !== false
 
     return (
-      <View ref="wrapper" style={{ flex: 1 }} collapsable={false}>
+      <View ref={(wrapper) => (this.wrapper = wrapper)} style={{ flex: 1 }} collapsable={false}>
         <ListView
           enableEmptySections
           {...this.props}
