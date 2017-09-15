@@ -2,7 +2,7 @@
 
 exports[`renders correctly 1`] = `
 <View
-  onLayout={[Function]}
+  collapsable={false}
   style={
     Object {
       "flex": 1,

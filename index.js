@@ -6,6 +6,7 @@ import {
   Dimensions,
   PanResponder,
   LayoutAnimation,
+  InteractionManager,
 } from 'react-native'
 
 const HEIGHT = Dimensions.get('window').height
@@ -78,7 +79,7 @@ class Row extends React.Component {
       <View
         onLayout={this.props.onRowLayout}
         style={[
-          this.props.active && !this.props.hovering ? { height: 0.01 } : null,
+          this.props.active && !this.props.hovering ? { height: 0.01, opacity: 0.0 } : null,
           this.props.active && this.props.hovering ? { opacity: 0.0 } : null,
         ]}
         ref="view"
@@ -265,12 +266,20 @@ class SortableListView extends React.Component {
     }
   }
 
-  handleWrapperLayout = e => {
-    const layout = e.nativeEvent.layout
-    this.wrapperLayout = {
-      frameHeight: layout.height,
-      pageY: layout.y,
-    }
+  measureWrapper = () => {
+    this.refs.wrapper.measure(
+      (frameX, frameY, frameWidth, frameHeight, pageX, pageY) => {
+        const layout = {
+          frameX,
+          frameY,
+          frameWidth,
+          frameHeight,
+          pageX,
+          pageY,
+        }
+        this.wrapperLayout = layout
+      }
+    )
   }
 
   handleListLayout = e => {
@@ -436,6 +445,12 @@ class SortableListView extends React.Component {
     this.setOrder(this.props)
   }
 
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      setTimeout(this.measureWrapper, 0)
+    })
+  }
+
   componentWillReceiveProps(props) {
     this.setOrder(props)
   }
@@ -457,7 +472,7 @@ class SortableListView extends React.Component {
       !this.state.active && this.props.scrollEnabled !== false
 
     return (
-      <View style={{ flex: 1 }} onLayout={this.handleWrapperLayout}>
+      <View ref="wrapper" style={{ flex: 1 }} collapsable={false}>
         <ListView
           enableEmptySections
           {...this.props}
