@@ -30,7 +30,7 @@ class Row extends React.Component {
   handleLongPress = e => {
     this.refs.view.measure(
       (frameX, frameY, frameWidth, frameHeight, pageX, pageY) => {
-        const layout = { frameHeight, pageY: frameY }
+        const layout = { frameHeight, pageY }
         this.props.onRowActive({
           layout,
           touch: e.nativeEvent,
@@ -267,7 +267,7 @@ class SortableListView extends React.Component {
   }
 
   measureWrapper = () => {
-    this.wrapper.measure(
+    this.refs.wrapper && this.refs.wrapper.measure(
       (frameX, frameY, frameWidth, frameHeight, pageX, pageY) => {
         const layout = {
           frameX,
@@ -472,7 +472,7 @@ class SortableListView extends React.Component {
       !this.state.active && this.props.scrollEnabled !== false
 
     return (
-      <View ref={(wrapper) => (this.wrapper = wrapper)} style={{ flex: 1 }} collapsable={false}>
+      <View ref="wrapper" style={{ flex: 1 }} collapsable={false}>
         <ListView
           enableEmptySections
           {...this.props}
